@@ -106,19 +106,20 @@ elif Cores == 1:
             print('No particles left!')
             sys.exit()
 
-        if (i+1)%1000 == 0:
+        if (i+1)%10000 == 0:
             #print(D2 - math.sqrt(x_in**2 + y_in**2))
             #D2 = math.sqrt(x**2 + y**2)
 
             if PLOT_ON is True:
-                plt.xlim(-x_in*1.3, x_in*1.3)
-                plt.ylim(-x_in*1.3, x_in*1.3)
+                plt.xlim(-0.5*AU, 5*AU)
+                plt.ylim(-2*AU, 2*AU)
                 rot_s = dt*i*omega*57.2958 + 270
                 plt.plot(0, 0, marker=(3, 0, rot_s), markersize=8, linestyle='None', c='k')
-                plt.scatter(x,y,c=IDs, s=1)
+                #plt.txt
+                plt.scatter(x,y,c=IDs, s=4, cmap='Blues')
                 plt.clim(0, TOT_PARTS)
                 plt.pause(0.05)
-                plt.clf()
+                #plt.clf()
 
 else:
     for i in range(n_steps):
@@ -155,16 +156,16 @@ else:
             print('No particles left!')
             sys.exit()
 
-        if (i+1)%1000 == 0:
+        if (i+1)%10000 == 0:
             #print(D2 - math.sqrt(x_in**2 + y_in**2))
             #D2 = math.sqrt(x**2 + y**2)
 
             if PLOT_ON is True:
-                plt.xlim(-x_in*1.3, x_in*1.3)
+                plt.xlim(-2*AU, 0.5*AU)
                 plt.ylim(-x_in*1.3, x_in*1.3)
                 rot_s = dt*i*omega*57.2958 + 270
                 plt.plot(0, 0, marker=(3, 0, rot_s), markersize=8, linestyle='None', c='k')
-                plt.scatter(x,y,c=IDs, s=1)
+                plt.scatter(x,y,c=IDs, s=8)
                 plt.clim(0, TOT_PARTS)
                 plt.pause(0.05)
                 plt.clf()
