@@ -17,9 +17,8 @@ def PR_drag(x, y, r_e, m_e, vx, vy, TEMP, dt, R):
     d = math.sqrt((x**2 + y**2))
 
     A = pi*r_e**2 #cross sectional Area
-    L = R**2*SB*TEMP**4 #Luminosity 
+    L = R**2*SB*TEMP**4*1e-3#Luminosity 
     S = L /d**2 #Flux density
-    
     P1 = S*A/c_s
 
     rv = (vx*x + vy*y)/d #radial velocity
@@ -98,7 +97,7 @@ def magdrag(x ,y, vx, vy, mag, m_e, R_e, M, R):
     else:
         wy = math.sqrt(w**2 - wx**2)
 
-    jj = 0.00*Sr #epsilon, smoothing factor
+    jj = 0.0*Sr #epsilon, smoothing factor
 
     mag2 = mag*(R/math.sqrt(d**2+jj**2))**3 #Scale dipole field with distance (smoothing factor jj)
 

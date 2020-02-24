@@ -7,17 +7,17 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from CONFIG import *
-from integrator import basic_int, RK4, YOSHI
+from integrator import basic_int, RK4_conv, RK4, YOSHI
 
 
 time1 = time.time()
 print('')
 print('                  Stellar Parameters                 ')
 print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
-print('Stellar Mass = '+str(M/Sm)+' M⊙')
-print('Stellar Radius = '+str(R/Sr)+' R⊙') 
+print('Stellar Mass = '+str(M/Sm)+' Solar Masses')
+print('Stellar Radius = '+str(R/Sr)+' Solar Radii') # alice doesnt recognise \odot  
 print('Magnetic Field = '+str(B)+' Guass')
-print('Field inclination = '+str(inc)+'°')
+print('Field inclination = '+str(inc)+'degrees') # alice doesnt regonise degree symbol
 print('Stellar Temperature = '+str(TEMP)+' Kelvin')
 print('Star spin = '+str(omega)+' UNITS?')
 print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
@@ -30,6 +30,8 @@ elif integ == 'yoshi':
     func = YOSHI
 elif integ == 'RK4':
     func = RK4
+elif integ == 'RK4_cv':
+    func = RK4_conv
 elif integ == 'BS':
     func = None
     print('BS not ready!')
@@ -83,9 +85,8 @@ elif Cores == 1:
             IDs[pn],x[pn],y[pn],vx[pn],vy[pn] = func(IDs[pn], x[pn],y[pn],vx[pn],vy[pn], m_p[pn], r_p[pn],dt, M, R, B, TEMP)
 
 
-
         if (x[pn]**2 + y[pn]**2) < (ACC_RAD)**2:
-            print('Collision: particle '+str(IDs[pn])+' removed | time = '+str(dt*(i+1)))
+            print('Collision: particle '+str(IDs[pn])+' removed | time = '+str(dt*(i+1)*3.17098e-8)+' years')
             x.pop(pn)
             y.pop(pn)
             vx.pop(pn)
@@ -94,7 +95,7 @@ elif Cores == 1:
             m_p.pop(pn)
             IDs.pop(pn)
         elif (x[pn]**2 + y[pn]**2) > (EJE_RAD)**2:
-            print('Ejected: particle '+str(IDs[pn])+' removed | time = '+str(dt*(i+1)))
+            print('Ejected: particle '+str(IDs[pn])+' removed | time = '+str(dt*(i+1)*3.17098e-8)+' years')
             x.pop(pn)
             y.pop(pn)
             vx.pop(pn)
@@ -106,20 +107,26 @@ elif Cores == 1:
             print('No particles left!')
             sys.exit()
 
-        if (i+1)%10000 == 0:
-            #print(D2 - math.sqrt(x_in**2 + y_in**2))
-            #D2 = math.sqrt(x**2 + y**2)
+        if (i+1)%OUTPUT_int == 0:
+            print(str(dt*(i+1)*3.17098e-8)+' years')
+            D2 = round(math.sqrt(x[0]**2 + y[0]**2))
+            if write_files == True:
+                FILE = open(str(dt*i)+'.txt','w')
+                for L in range(len(x)):
+                    FILE.write(str(x[L])+','+str(y[L])+','+str(vx[L])+','+str(vy[L])+','+str(IDs[L])+','+str(r_p[L])+','+str(m_p[L])+'\n')
 
             if PLOT_ON is True:
-                plt.xlim(-0.5*AU, 5*AU)
-                plt.ylim(-2*AU, 2*AU)
+                plt.xlim(-AU, 2*AU)
+                plt.ylim(-AU,AU)
                 rot_s = dt*i*omega*57.2958 + 270
                 plt.plot(0, 0, marker=(3, 0, rot_s), markersize=8, linestyle='None', c='k')
-                #plt.txt
+                TIME_YEARS = round((i*dt*3.17098e-8), 4)
+                plt.text(4.0*AU/7, 6.0*AU/7,str(TIME_YEARS)+' years')
                 plt.scatter(x,y,c=IDs, s=4, cmap='Blues')
+                plt.text(4.0*AU/7, 5.0*AU/7,str(D2/Sr)+' R$\odot$')
                 plt.clim(0, TOT_PARTS)
                 plt.pause(0.05)
-                #plt.clf()
+                plt.clf()
 
 else:
     for i in range(n_steps):
@@ -134,7 +141,7 @@ else:
             vy[idx] = part[4]
 
             if (x[idx]**2 + y[idx]**2) < (ACC_RAD)**2:
-                print('Collision: particle '+str(IDs[idx])+' removed | time = '+str(dt*(i+1)))
+                print('Collision: particle '+str(IDs[idx])+' removed | time = '+str(dt*(i+1)*3.17098e-8)+' years')
                 x.pop(idx)
                 y.pop(idx)
                 vx.pop(idx)
@@ -143,7 +150,7 @@ else:
                 m_p.pop(idx)
                 IDs.pop(idx)
             elif (x[idx]**2 + y[idx]**2) > (EJE_RAD)**2:
-                print('Ejected: particle '+str(IDs[idx])+' removed | time = '+str(dt*(i+1)))
+                print('Ejected: particle '+str(IDs[idx])+' removed | time = '+str(dt*(i+1)*3.17098e-8)+' years')
                 x.pop(idx)
                 y.pop(idx)
                 vx.pop(idx)
@@ -156,10 +163,12 @@ else:
             print('No particles left!')
             sys.exit()
 
-        if (i+1)%10000 == 0:
-            #print(D2 - math.sqrt(x_in**2 + y_in**2))
-            #D2 = math.sqrt(x**2 + y**2)
-
+        if (i+1)%OUTPUT_int == 0:
+            print(str(dt*(i+1)*3.17098e-8)+' years')
+            if write_files == True:
+                FILE = open(str(int(dt*i))+'.txt','w')
+                for L in range(len(x)):
+                    FIlE.write(str(x[L])+','+str(y[L])+','+str(vx[L])+','+str(vy[L])+','+str(IDs[L])+','+str(r_p[L])+','+str(m_p[L])+'\n')
             if PLOT_ON is True:
                 plt.xlim(-2*AU, 0.5*AU)
                 plt.ylim(-x_in*1.3, x_in*1.3)
@@ -170,7 +179,7 @@ else:
                 plt.pause(0.05)
                 plt.clf()
 
-print(time.time() - time1)
+#print(time.time() - time1)
 
 
 

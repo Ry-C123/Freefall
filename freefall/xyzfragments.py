@@ -5,8 +5,8 @@ import numpy as np
 import scipy.stats
 from CONFIG import *
 
-peri=0.9*696e6
-ecc =0.9966
+peri=696e6
+ecc =0
 
 def initial_conditions_calculator(G,M,ecc,peri):
     #peri = Periastron
