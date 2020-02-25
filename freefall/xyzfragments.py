@@ -79,7 +79,7 @@ while i<1:
     newvz=round(random.choice(deltavz),11)
 
     #print newx, newy, newz, m, newvx, newvy, newvz, r 
-    R.write(str(i+1)+","+str(newx)+","+str(newy)+","+str(newvx)+","+str(newvy)+","+str(m)+","+str(r)+"\n")
+    R.write(str(i+1)+","+str(newx)+","+str(newy)+","+str(newz)+","+str(newvx)+","+str(newvy)+","+str(newvz)+","+str(m)+","+str(r)+"\n")
     i+=1
 
 

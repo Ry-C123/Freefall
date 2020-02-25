@@ -33,8 +33,7 @@ elif integ == 'RK4':
 elif integ == 'RK4_cv':
     func = RK4_conv
 elif integ == 'BS':
-    func = None
-    print('BS not ready!')
+    print('in prep')
     sys.exit()
 else:
     raise ValueError(integ+" is not a valid integrator. Use either 'basic', 'yoshi', or 'RK4'")
@@ -44,13 +43,13 @@ particles = open('test_part.conf', 'r').readlines()
 IDs = []
 x = []
 y = []
-#z =[] TODO
+z =[] 
 vx = []
 vy = []
-#vz = [] TODO
+vz = [] 
 m_p = []
 r_p = []
-D2 = []
+
 for i in range(len(particles)):
     if '#' in particles[i]:
         continue
@@ -60,13 +59,15 @@ for i in range(len(particles)):
     IDs.append(int(tmp[0]))
     x.append(float(tmp[1]))
     y.append(float(tmp[2]))
+    z.append(float(tmp[3]))
     vx.append(float(tmp[3]))
-    vy.append(float(tmp[4]))
-    m_p.append(float(tmp[5]))
-    r_p.append(float(tmp[6]))
-    D2.append(math.sqrt(float(tmp[1])**2 + float(tmp[2])**2)) #Initial Distance
+    vy.append(float(tmp[5]))
+    vz.append(float(tmp[6]))
+    m_p.append(float(tmp[7]))
+    r_p.append(float(tmp[8]))
+    #D2.append(math.sqrt(float(tmp[1])**2 + float(tmp[2])**2)) #Initial Distance
 
-x_in = max(x)
+#x_in = max(x)
 TOT_PARTS = len(x)
 
 if Cores == 'max':
@@ -82,15 +83,17 @@ elif Cores == 1:
     for i in range(n_steps):
 
         for pn in range(len(x)):
-            IDs[pn],x[pn],y[pn],vx[pn],vy[pn] = func(IDs[pn], x[pn],y[pn],vx[pn],vy[pn], m_p[pn], r_p[pn],dt, M, R, B, TEMP)
+            IDs[pn],x[pn],y[pn],z[pn],vx[pn],vy[pn],vz[pn] = func(IDs[pn], x[pn],y[pn],z[pn],vx[pn],vy[pn],vz[pn], m_p[pn], r_p[pn],dt, M, R, B, TEMP)
 
 
-        if (x[pn]**2 + y[pn]**2) < (ACC_RAD)**2:
+        if (x[pn]**2 + y[pn]**2 + z[pn]**2) < (ACC_RAD)**2:
             print('Collision: particle '+str(IDs[pn])+' removed | time = '+str(dt*(i+1)*3.17098e-8)+' years')
             x.pop(pn)
             y.pop(pn)
+            z.pop(pn)
             vx.pop(pn)
             vy.pop(pn)
+            vz.pop(pn)
             r_p.pop(pn)
             m_p.pop(pn)
             IDs.pop(pn)
@@ -98,8 +101,10 @@ elif Cores == 1:
             print('Ejected: particle '+str(IDs[pn])+' removed | time = '+str(dt*(i+1)*3.17098e-8)+' years')
             x.pop(pn)
             y.pop(pn)
+            z.pop(pn)
             vx.pop(pn)
             vy.pop(pn)
+            vz.pop(pn)
             r_p.pop(pn)
             m_p.pop(pn)
             IDs.pop(pn)
@@ -109,15 +114,15 @@ elif Cores == 1:
 
         if (i+1)%OUTPUT_int == 0:
             print(str(dt*(i+1)*3.17098e-8)+' years')
-            D2 = round(math.sqrt(x[0]**2 + y[0]**2))
+            D2 = round(math.sqrt(x[0]**2 + y[0]**2 + z[0]**2))
             if write_files == True:
                 FILE = open(str(dt*i)+'.txt','w')
                 for L in range(len(x)):
-                    FILE.write(str(x[L])+','+str(y[L])+','+str(vx[L])+','+str(vy[L])+','+str(IDs[L])+','+str(r_p[L])+','+str(m_p[L])+'\n')
+                    FILE.write(str(x[L])+','+str(y[L])+','+str(z[L])+','+str(vx[L])+','+str(vy[L])+','+str(vz[L])+','+str(IDs[L])+','+str(r_p[L])+','+str(m_p[L])+'\n')
 
             if PLOT_ON is True:
-                plt.xlim(-AU, 2*AU)
-                plt.ylim(-AU,AU)
+                plt.xlim(-2*Sr, 2*Sr)
+                plt.ylim(-2*Sr,2*Sr)
                 rot_s = dt*i*omega*57.2958 + 270
                 plt.plot(0, 0, marker=(3, 0, rot_s), markersize=8, linestyle='None', c='k')
                 TIME_YEARS = round((i*dt*3.17098e-8), 4)
