@@ -76,11 +76,11 @@ else:
     Cores = int(Cores)
 print('Using '+str(Cores)+' Core(s)') 
 
-
+i = 0
 if Cores < 1:
     raise ValueError("Cores < 1: You need to use at least 1 core!")  
 elif Cores == 1:
-    for i in range(n_steps):
+    while i < n_steps:
 
         for pn in range(len(x)):
             IDs[pn],x[pn],y[pn],z[pn],vx[pn],vy[pn],vz[pn] = func(IDs[pn], x[pn],y[pn],z[pn],vx[pn],vy[pn],vz[pn], m_p[pn], r_p[pn],dt, M, R, B, TEMP)
@@ -97,7 +97,7 @@ elif Cores == 1:
             r_p.pop(pn)
             m_p.pop(pn)
             IDs.pop(pn)
-        elif (x[pn]**2 + y[pn]**2) > (EJE_RAD)**2:
+        elif (x[pn]**2 + y[pn]**2 + z[pn]**2) > (EJE_RAD)**2:
             print('Ejected: particle '+str(IDs[pn])+' removed | time = '+str(dt*(i+1)*3.17098e-8)+' years')
             x.pop(pn)
             y.pop(pn)
@@ -132,34 +132,41 @@ elif Cores == 1:
                 plt.clim(0, TOT_PARTS)
                 plt.pause(0.05)
                 plt.clf()
-
+        i += 1
 else:
-    for i in range(n_steps):
+    while i < n_steps:
         STAR_PARAMS = [dt, M, R, B, TEMP]
         with multiprocessing.Pool(Cores) as p:
-            OUT = p.starmap(func, [([IDs[i],x[i],y[i],vx[i],vy[i], m_p[i],r_p[i]]+STAR_PARAMS) for i in range(len(x))])
+            OUT = p.starmap(func, [([IDs[i],x[i],y[i],z[i],vx[i],vy[i],vz[i], m_p[i],r_p[i]]+STAR_PARAMS) for i in range(len(x))])
+        p.close()
         for part in OUT:
             idx = part[0]-1
             x[idx] = part[1]
             y[idx] = part[2]
-            vx[idx] = part[3]
-            vy[idx] = part[4]
+            z[idx] = part[3]
+            vx[idx] = part[4]
+            vy[idx] = part[5]
+            vz[idx] = part[6]
 
-            if (x[idx]**2 + y[idx]**2) < (ACC_RAD)**2:
+            if (x[idx]**2 + y[idx]**2 + z[idx]**2) < (ACC_RAD)**2:
                 print('Collision: particle '+str(IDs[idx])+' removed | time = '+str(dt*(i+1)*3.17098e-8)+' years')
                 x.pop(idx)
                 y.pop(idx)
+                z.pop(idx)
                 vx.pop(idx)
                 vy.pop(idx)
+                vz.pop(idx)
                 r_p.pop(idx)
                 m_p.pop(idx)
                 IDs.pop(idx)
-            elif (x[idx]**2 + y[idx]**2) > (EJE_RAD)**2:
+            elif (x[idx]**2 + y[idx]**2 + z[idx]**2) > (EJE_RAD)**2:
                 print('Ejected: particle '+str(IDs[idx])+' removed | time = '+str(dt*(i+1)*3.17098e-8)+' years')
                 x.pop(idx)
                 y.pop(idx)
+                z.pop(idx)
                 vx.pop(idx)
                 vy.pop(idx)
+                vz.pop(idx)
                 r_p.pop(idx)
                 m_p.pop(idx)
                 IDs.pop(idx)    
@@ -173,7 +180,7 @@ else:
             if write_files == True:
                 FILE = open(str(int(dt*i))+'.txt','w')
                 for L in range(len(x)):
-                    FIlE.write(str(x[L])+','+str(y[L])+','+str(vx[L])+','+str(vy[L])+','+str(IDs[L])+','+str(r_p[L])+','+str(m_p[L])+'\n')
+                    FIlE.write(str(x[L])+','+str(y[L])+','+str(z[L])+','+str(vx[L])+','+str(vy[L])+','+str(vz[L])+','+str(IDs[L])+','+str(r_p[L])+','+str(m_p[L])+'\n')
             if PLOT_ON is True:
                 plt.xlim(-2*AU, 0.5*AU)
                 plt.ylim(-x_in*1.3, x_in*1.3)
@@ -183,7 +190,7 @@ else:
                 plt.clim(0, TOT_PARTS)
                 plt.pause(0.05)
                 plt.clf()
-
+        i+=1
 #print(time.time() - time1)
 
 

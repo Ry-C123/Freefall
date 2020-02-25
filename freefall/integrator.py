@@ -189,7 +189,7 @@ def YOSHI(ID,x,y,z,vx,vy,vz,m_e, r_e,dt,M, R, B, TEMP):
     Y2 = Y1 - 0.1756*VY1*dt
     Z2 = Z1 - 0.1756*VZ1*dt
 
-    AX2,AY2,AZ2= get_acc(X2,Y2,Z2,vx,vy,vz,M, R, m_e, r_e, B, TEMP)
+    AX2,AY2,AZ2= get_acc(X2,Y2,Z2,VX1,VY1,VZ1,M, R, m_e, r_e, B, TEMP)
     VX2 = VX1 + D2*AX2*dt
     VY2 = VY1 + D2*AY2*dt
     VZ2 = VZ1 + D2*AZ2*dt
@@ -198,7 +198,7 @@ def YOSHI(ID,x,y,z,vx,vy,vz,m_e, r_e,dt,M, R, B, TEMP):
     Y3 = Y2 - 0.1756*VY2*dt
     Z3 = Z2 - 0.1756*VZ2*dt
 
-    AX3,AY3,AZ3= get_acc(X3,Y3,Z3,vx,vy,vz,M, R, m_e, r_e, B, TEMP)
+    AX3,AY3,AZ3= get_acc(X3,Y3,Z3,VX1,VY2,VZ2,M, R, m_e, r_e, B, TEMP)
     VX3 = VX2 + D2*AX2*dt
     VY3 = VY2 + D2*AY2*dt
     VZ3 = VZ2 + D2*AZ2*dt
