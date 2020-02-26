@@ -119,7 +119,8 @@ elif Cores == 1:
                 FILE = open(str(dt*i)+'.txt','w')
                 for L in range(len(x)):
                     FILE.write(str(x[L])+','+str(y[L])+','+str(z[L])+','+str(vx[L])+','+str(vy[L])+','+str(vz[L])+','+str(IDs[L])+','+str(r_p[L])+','+str(m_p[L])+'\n')
-
+                FILE.close()
+                    
             if PLOT_ON is True:
                 plt.xlim(-2*Sr, 2*Sr)
                 plt.ylim(-2*Sr,2*Sr)
@@ -181,6 +182,7 @@ else:
                 FILE = open(str(int(dt*i))+'.txt','w')
                 for L in range(len(x)):
                     FIlE.write(str(x[L])+','+str(y[L])+','+str(z[L])+','+str(vx[L])+','+str(vy[L])+','+str(vz[L])+','+str(IDs[L])+','+str(r_p[L])+','+str(m_p[L])+'\n')
+                FILE.close()
             if PLOT_ON is True:
                 plt.xlim(-2*AU, 0.5*AU)
                 plt.ylim(-x_in*1.3, x_in*1.3)
