@@ -83,7 +83,7 @@ elif Cores == 1:
     while i < n_steps:
 
         for pn in range(len(x)):
-            IDs[pn],x[pn],y[pn],z[pn],vx[pn],vy[pn],vz[pn] = func(IDs[pn], x[pn],y[pn],z[pn],vx[pn],vy[pn],vz[pn], m_p[pn], r_p[pn],dt, M, R, B, TEMP)
+            IDs[pn],x[pn],y[pn],z[pn],vx[pn],vy[pn],vz[pn] = func(IDs[pn], x[pn],y[pn],z[pn],vx[pn],vy[pn],vz[pn], m_p[pn], r_p[pn],dt,i, M, R, B, TEMP,omega,inc)
 
 
         if (x[pn]**2 + y[pn]**2 + z[pn]**2) < (ACC_RAD)**2:
@@ -119,8 +119,7 @@ elif Cores == 1:
                 FILE = open(str(dt*i)+'.txt','w')
                 for L in range(len(x)):
                     FILE.write(str(x[L])+','+str(y[L])+','+str(z[L])+','+str(vx[L])+','+str(vy[L])+','+str(vz[L])+','+str(IDs[L])+','+str(r_p[L])+','+str(m_p[L])+'\n')
-                FILE.close()
-                    
+
             if PLOT_ON is True:
                 plt.xlim(-2*Sr, 2*Sr)
                 plt.ylim(-2*Sr,2*Sr)
@@ -136,7 +135,7 @@ elif Cores == 1:
         i += 1
 else:
     while i < n_steps:
-        STAR_PARAMS = [dt, M, R, B, TEMP]
+        STAR_PARAMS = [dt,i, M, R, B, TEMP,omega,inc]
         with multiprocessing.Pool(Cores) as p:
             OUT = p.starmap(func, [([IDs[i],x[i],y[i],z[i],vx[i],vy[i],vz[i], m_p[i],r_p[i]]+STAR_PARAMS) for i in range(len(x))])
         p.close()
@@ -182,7 +181,6 @@ else:
                 FILE = open(str(int(dt*i))+'.txt','w')
                 for L in range(len(x)):
                     FIlE.write(str(x[L])+','+str(y[L])+','+str(z[L])+','+str(vx[L])+','+str(vy[L])+','+str(vz[L])+','+str(IDs[L])+','+str(r_p[L])+','+str(m_p[L])+'\n')
-                FILE.close()
             if PLOT_ON is True:
                 plt.xlim(-2*AU, 0.5*AU)
                 plt.ylim(-x_in*1.3, x_in*1.3)
