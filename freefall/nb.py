@@ -33,7 +33,7 @@ elif integ == 'RK4':
 elif integ == 'RK4_cv':
     func = RK4_conv
 elif integ == 'BS':
-    print('in prep')
+    print('Bul_Stoer in prep come back later')
     sys.exit()
 else:
     raise ValueError(integ+" is not a valid integrator. Use either 'basic', 'yoshi', or 'RK4'")
