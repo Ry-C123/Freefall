@@ -71,7 +71,7 @@ for i in range(len(particles)):
 TOT_PARTS = len(x)
 
 if Cores == 'max':
-    Cores = multiprocessing.cpu_count()
+    Cores = multiprocessing.cpu_count() - 1 #Good practice dictates to use one less core than max
 else:
     Cores = int(Cores)
 print('Using '+str(Cores)+' Core(s)') 
