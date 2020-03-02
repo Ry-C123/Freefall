@@ -16,6 +16,7 @@ Gcm =6.67*1e-8 # Gravitational Constant in CGS
 
 
 
+
 #####     Central Star Parameters     ########
 
 M = 0.6*Sm #Central Star Mass (Kg)
@@ -35,6 +36,7 @@ omega = 0.0 #Star spin (radians per second)
 
 #####     Simulation Parameters     ########
 
+runname = 'test' #Name of your simulation
 dt = 25.1 #time step (s)
 n_steps = 1000000000000  #number of time steps
 ACC_RAD = 10*R #Collsion radius
@@ -47,9 +49,9 @@ integ = 'RK4' #'basic' will use basic integrator
                 #TODO 'BS' will use BS method
 
 PLOT_ON = None  #Change to True to get a real time plot... significantly slows down simulation time!
-write_files = None #Change to True to get output files, for plots, or other types of analysis 
-OUTPUT_int = 10000 # Output file and plot update every nth step
-
+write_files = True #Change to True to get output files, for plots, or other types of analysis 
+OUTPUT_int = 10000 # Output interval. Output file and plot update every nth step
+OVERWRITE = True #if a simultion already exists overwrite it
 
 Cores = 1 #n=1 - serial, n>1 - will use n parallel processes, cores='max' use maximum available processors.
 

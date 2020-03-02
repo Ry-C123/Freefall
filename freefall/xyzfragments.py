@@ -21,7 +21,7 @@ def initial_conditions_calculator(G,M,ecc,peri):
 Apo, V = initial_conditions_calculator(G,M,ecc,peri)
 
 R= open('test_part.conf' ,'w')
-R.write('##ID,X,Y,VX,VY,m,r\n')
+R.write('##ID,X,Y,Z,VX,VY,VZ,m,r\n')
 i=0
 #x=3.9954*AU
 x=Apo

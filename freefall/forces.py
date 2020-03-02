@@ -63,7 +63,7 @@ def gravity(x,y, z, M, m_e):
 def gravity_gr(x,y,z, M,m_e):
     """
     Ry Cutter 2020
-    Using gravity with a bbit of GR
+    Using gravity with a bit of GR
     """
     d = math.sqrt((x**2 + y**2 + z**2))
     F = float(-G*(M*m_e)/d**2) * 1.0/math.sqrt(1-(2*G*M/(c_s**2*d)))
