@@ -2,8 +2,10 @@ import sys
 import math
 import multiprocessing
 import time
-import glob
 import subprocess
+import glob
+import os
+
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -43,7 +45,12 @@ if __name__=='__main__':
         raise ValueError(integ+" is not a valid integrator. Use either 'basic', 'yoshi', or 'RK4'")
     ############################
 
-    particles = open('test_part.conf', 'r').readlines()
+    if restart == 0: 
+        particles = open('test_part.conf', 'r').readlines()
+    else:
+        print('')
+        print('resuming from '+runname+'_'+str(restart)+'.simo\n')
+        particles = open(runname+'_'+str(restart)+'.simo', 'r').readlines()   
     IDs = []
     x = []
     y = []
@@ -64,11 +71,11 @@ if __name__=='__main__':
         x.append(float(tmp[1]))
         y.append(float(tmp[2]))
         z.append(float(tmp[3]))
-        vx.append(float(tmp[3]))
+        vx.append(float(tmp[4]))
         vy.append(float(tmp[5]))
         vz.append(float(tmp[6]))
-        m_p.append(float(tmp[7]))
-        r_p.append(float(tmp[8]))
+        m_p.append(float(tmp[8]))
+        r_p.append(float(tmp[7]))
 
     #x_in = max(x)
     TOT_PARTS = len(x)
@@ -128,7 +135,7 @@ if __name__=='__main__':
             if (i+1)%OUTPUT_int == 0:
                 print(str(dt*(i+1)*3.17098e-8)+' years')
                 if write_files == True:
-                    FILE = open(runname+'_'+str(i)+'.simo','w')
+                    FILE = open(runname+'_'+str(i+1)+'.simo','w')
                     FILE.write('#ID,X,Y,Z,VX,VY,VZ,r,m,time(years)\n')
                     for L in range(len(x)):
                         FILE.write(str(IDs[L])+','+str(x[L])+','+str(y[L])+','+str(z[L])+','+str(vx[L])+','+str(vy[L])+','+str(vz[L])+','+str(r_p[L])+','+str(m_p[L])+','+str(round(dt*i*3.17098e-8,4))+'\n')
@@ -150,19 +157,52 @@ if __name__=='__main__':
     else:
         print('Running in parallel')
         HK = glob.glob(runname+'*.simo') ### Housekeeping
-        if HK != []:
+        if HK != [] and restart == 0:
             if OVERWRITE == True:
                for files_ in HK: 
                    subprocess.call(['rm',files_])
             else:
                 raise ValueError("Simulation already completed, OVERWRITE (in CONFIG) must = True to redo "+runname+" simulation")
+        if os.path.isfile(runname+'_'+str(restart+OUTPUT_int)+'.simo') == True:
+            raise ValueError("Restarted simulation already, please delete files ahead of "+str(restart)+" to restart simulation")
+
         from speedyboi import RUN #<- This is the function to allow everything to run in parallel
-        SIM_PARAMS=[n_steps, runname, PLOT_ON, OUTPUT_int, write_files,dt, M, R, B, TEMP,omega,inc, func, ACC_RAD, EJE_RAD]
-        with multiprocessing.Pool(Cores) as p:
-            OUT = p.starmap(RUN,[([IDs[i],x[i],y[i],z[i],vx[i],vy[i],vz[i], m_p[i],r_p[i]]+SIM_PARAMS) for i in range(len(x))])
+        for K in range(math.ceil(n_steps/catch_up)):
+            SIM_PARAMS=[catch_up, K, runname, restart, PLOT_ON, OUTPUT_int, write_files,dt, M, R, B, TEMP,omega,inc, func, ACC_RAD, EJE_RAD]
+            with multiprocessing.Pool(Cores) as p:
+                OUT = p.starmap(RUN,[([IDs[i],x[i],y[i],z[i],vx[i],vy[i],vz[i], m_p[i],r_p[i]]+SIM_PARAMS) for i in range(len(x))])
 
-
-
+            run_id = (catch_up*(K+1))+restart
+            print('All particles have made it to step '+str(run_id))
+            FN = runname+'_'+str(run_id)+'.simo'
+            try:
+                particles = open(FN,'r').readlines()
+            except:
+                print('No particles left, simulation terminated')
+                sys.exit()
+            IDs = []
+            x = []
+            y = []
+            z =[] 
+            vx = []
+            vy = []
+            vz = [] 
+            m_p = []
+            r_p = []
+            for i in range(len(particles)):
+                if '#' in particles[i]:
+                    continue
+                #ID,X,Y,Z,VX,VY,VZ,m,r    <- Param file format
+                tmp = particles[i].split(',')
+                IDs.append(int(tmp[0]))
+                x.append(float(tmp[1]))
+                y.append(float(tmp[2]))
+                z.append(float(tmp[3]))
+                vx.append(float(tmp[4]))
+                vy.append(float(tmp[5]))
+                vz.append(float(tmp[6]))
+                m_p.append(float(tmp[8]))
+                r_p.append(float(tmp[7]))
 
 
 

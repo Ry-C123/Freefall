@@ -21,7 +21,7 @@ def initial_conditions_calculator(G,M,ecc,peri):
 Apo, V = initial_conditions_calculator(G,M,ecc,peri)
 
 R= open('test_part.conf' ,'w')
-R.write('##ID,X,Y,Z,VX,VY,VZ,m,r\n')
+R.write('##ID,X,Y,Z,VX,VY,VZ,r,m\n')
 i=0
 #x=3.9954*AU
 x=Apo
@@ -79,7 +79,7 @@ while i<1:
     newvz=round(random.choice(deltavz),11)
 
     #print newx, newy, newz, m, newvx, newvy, newvz, r 
-    R.write(str(i+1)+","+str(newx)+","+str(newy)+","+str(newz)+","+str(newvx)+","+str(newvy)+","+str(newvz)+","+str(m)+","+str(r)+"\n")
+    R.write(str(i+1)+","+str(newx)+","+str(newy)+","+str(newz)+","+str(newvx)+","+str(newvy)+","+str(newvz)+","+str(r)+","+str(m)+"\n")
     i+=1
 
 
