@@ -6,9 +6,15 @@ import fcntl
 def RUN(ID,x,y,z,vx,vy,vz, m_p,r_p,n_steps, K,runname, restart, PLOT_ON, OUTPUT_int, write_files,dt, M, R, B, TEMP,omega,inc, func, ACC_RAD, EJE_RAD):
     i = 0
     if ID != 1:
-        time.sleep(0.05) #### Give particle 1 a headstart so writing to files isn't corrupted
-    while i < n_steps:
+        time.sleep(1) #### Give particle 1 a headstart so writing to files isn't corrupted
+    elif write_files == True:
+        for tmp in range(math.ceil(n_steps/OUTPUT_int)):
+            fi_name = runname+'_'+str((K*n_steps)+((tmp+1)*OUTPUT_int)+restart)+'.simo'
+            FILE = open(fi_name,'w') 
+            FILE.write('#ID,X,Y,Z,VX,VY,VZ,r,m,time(years)\n')
+            FILE.close()
 
+    while i < n_steps:
         T = ((K*n_steps)+i+1+restart)*dt*3.17098e-8 #Get actual timestep
         #Where the magic happens, this will timestep the particle by dt
         ID,x,y,z,vx,vy,vz = func(ID, x,y,z,vx,vy,vz,m_p,r_p,dt,(K*n_steps)+i+restart, M, R, B, TEMP,omega,inc)

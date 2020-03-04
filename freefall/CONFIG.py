@@ -21,7 +21,7 @@ Gcm =6.67*1e-8 # Gravitational Constant in CGS
 
 M = 0.6*Sm #Central Star Mass (Kg)
 R = 0.01*Sr #Central Star Radius (m)
-B = 1e6 #Central Star magnetic field (Guass) [If 0 Mag drag is off]
+B = 0 #Central Star magnetic field (Guass) [If 0 Mag drag is off]
 inc = 0 # Field inclination to the spin axis (deg)
 TEMP = 0 #Star Temp (kelvin) [If 0 PR drag is off]
 omega = 0.0 #Star spin (radians per second) 
@@ -36,11 +36,11 @@ omega = 0.0 #Star spin (radians per second)
 
 #####     Simulation Parameters     ########
 
-runname = 'test2' #Name of your simulation
-restart = 0 #10000 #use step_number to continue simulation runname from that given timestep
-dt = 25.1 #time step (s)
-n_steps = 2000000 #number of time steps
-ACC_RAD = 10*R #Collsion radius
+runname = 'DV' #Name of your simulation
+restart = 9000 #10000 #use step_number to continue simulation runname from that given timestep
+dt = 1.1 #time step (s)
+n_steps = 2000000000 #number of time steps
+ACC_RAD = 2*R #Collsion radius
 EJE_RAD = 10*AU # Ejection radius
 
 integ = 'RK4' #'basic' will use basic integrator 
@@ -51,13 +51,13 @@ integ = 'RK4' #'basic' will use basic integrator
 
 PLOT_ON = None  #Change to True to get a real time plot... significantly slows down simulation time!
 write_files = True #Change to True to get output files, for plots, or other types of analysis 
-OUTPUT_int = 10000 # Output interval. Output file and plot update every nth step
-catch_up = OUTPUT_int * 1 #Make sure all particles are at every nth step before carrying on simulation !!!(Must be a multiple of OUTPUT_int)!!!
+OUTPUT_int = 1000 # Output interval. Output file and plot update every nth step
+catch_up = OUTPUT_int * 3 #Make sure all particles are at every nth step before carrying on simulation !!!(Must be a multiple of OUTPUT_int)!!!
 OVERWRITE = True #if a simultion already exists overwrite it
 
 
 
-Cores = 2 #n=1 - serial, n>1 - will use n parallel processes, cores='max' use maximum available processors.
+Cores = 3 #n=1 - serial, n>1 - will use n parallel processes, cores='max' use maximum available processors.
 
 
 
