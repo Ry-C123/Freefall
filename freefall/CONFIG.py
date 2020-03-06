@@ -37,8 +37,8 @@ omega = 0.0 #Star spin (radians per second)
 #####     Simulation Parameters     ########
 
 runname = 'DV' #Name of your simulation
-restart = 9000 #10000 #use step_number to continue simulation runname from that given timestep
-dt = 1.1 #time step (s)
+restart = 0 #10000 #use step_number to continue simulation runname from that given timestep
+dt = 6.1 #time step (s)
 n_steps = 2000000000 #number of time steps
 ACC_RAD = 2*R #Collsion radius
 EJE_RAD = 10*AU # Ejection radius

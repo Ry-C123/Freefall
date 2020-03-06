@@ -5,11 +5,9 @@ import fcntl
 
 def RUN(ID,x,y,z,vx,vy,vz, m_p,r_p,n_steps, K,runname, restart, PLOT_ON, OUTPUT_int, write_files,dt, M, R, B, TEMP,omega,inc, func, ACC_RAD, EJE_RAD):
     i = 0
-    if ID != 1:
-        time.sleep(1) #### Give particle 1 a headstart so writing to files isn't corrupted
-    elif write_files == True:
-        for tmp in range(math.ceil(n_steps/OUTPUT_int)):
-            fi_name = runname+'_'+str((K*n_steps)+((tmp+1)*OUTPUT_int)+restart)+'.simo'
+    for tmp in range(math.ceil(n_steps/OUTPUT_int)):
+        fi_name = runname+'_'+str((K*n_steps)+((tmp+1)*OUTPUT_int)+restart)+'.simo'
+        if os.path.isfile(fi_name) != True and write_files == True:
             FILE = open(fi_name,'w') 
             FILE.write('#ID,X,Y,Z,VX,VY,VZ,r,m,time(years)\n')
             FILE.close()
@@ -36,12 +34,12 @@ def RUN(ID,x,y,z,vx,vy,vz, m_p,r_p,n_steps, K,runname, restart, PLOT_ON, OUTPUT_
                     # UNIX is atomic to 4096 bytes - meaning if the simulation isn't
                     # running for infinite time, one shouldn't need to file lock to 
                     # avid corruption ~ 
-                else:
-                    FILE = open(fi_name,'w') 
-                    FILE.write('#ID,X,Y,Z,VX,VY,VZ,r,m,time(years)\n')
+                   #else:
+                  #  FILE = open(fi_name,'w') 
+                   # FILE.write('#ID,X,Y,Z,VX,VY,VZ,r,m,time(years)\n')
 
-                FILE.write(str(ID)+','+str(x)+','+str(y)+','+str(z)+','+str(vx)+','+str(vy)+','+str(vz)+','+str(r_p)+','+str(m_p)+','+str(round(T,4))+'\n')
-                FILE.close()
+                    FILE.write(str(ID)+','+str(x)+','+str(y)+','+str(z)+','+str(vx)+','+str(vy)+','+str(vz)+','+str(r_p)+','+str(m_p)+','+str(round(T,4))+'\n')
+                    FILE.close()
         
 
 
