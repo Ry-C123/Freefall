@@ -8,6 +8,8 @@ from CONFIG import *
 peri=696e6/100 * 11.8
 ecc =0.9966
 
+
+
 def initial_conditions_calculator(G,M,ecc,peri):
     #peri = Periastron
     #ecc = eccentricity

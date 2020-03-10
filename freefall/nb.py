@@ -167,19 +167,26 @@ if __name__=='__main__':
             raise ValueError("Restarted simulation already, please delete files ahead of "+str(restart)+" to restart simulation")
 
         from speedyboi import RUN #<- This is the function to allow everything to run in parallel
-        for K in range(math.ceil(n_steps/catch_up)):
-            SIM_PARAMS=[catch_up, K, runname, restart, PLOT_ON, OUTPUT_int, write_files,dt, M, R, B, TEMP,omega,inc, func, ACC_RAD, EJE_RAD]
+        for K in range(math.ceil(n_steps/OUTPUT_int)):
+            SIM_PARAMS=[K, runname, restart, PLOT_ON, OUTPUT_int, write_files,dt, M, R, B, TEMP,omega,inc, func, ACC_RAD, EJE_RAD]
             with multiprocessing.Pool(Cores) as p:
                 OUT = p.starmap(RUN,[([IDs[i],x[i],y[i],z[i],vx[i],vy[i],vz[i], m_p[i],r_p[i]]+SIM_PARAMS) for i in range(len(x))])
 
-            run_id = (catch_up*(K+1))+restart
-            print('All particles have made it to step '+str(run_id))
-            FN = runname+'_'+str(run_id)+'.simo'
-            try:
-                particles = open(FN,'r').readlines()
-            except:
-                print('No particles left, simulation terminated')
+            if all(x is None for x in OUT):
+                print('No particles let, simulation terminated')
                 sys.exit()
+
+            run_id = (OUTPUT_int*(K+1))+restart
+            FN = runname+'_'+str(run_id)+'.simo'
+            TXT = open(FN, 'w')
+            for lin in OUT:
+                if lin is not None:
+                    TXT.write(lin)
+            TXT.close()
+            print('All particles have made it to step '+str(run_id))
+
+            particles = open(FN,'r').readlines()
+
             IDs = []
             x = []
             y = []
