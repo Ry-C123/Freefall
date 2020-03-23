@@ -143,12 +143,12 @@ if __name__=='__main__':
                 if PLOT_ON is True:
                     plt.xlim(-2*Sr, 2*Sr)
                     plt.ylim(-2*Sr,2*Sr)
-                    rot_s = dt*i*omega*57.2958 + 270
+                    rot_s = (dt*i*omega*57.2958) + 270
                     plt.plot(0, 0, marker=(3, 0, rot_s), markersize=8, linestyle='None', c='k')
                     TIME_YEARS = round((i*dt*3.17098e-8), 4)
-                    plt.text(4.0*AU/7, 6.0*AU/7,str(TIME_YEARS)+' years')
+                    plt.text(8.0*Sr/7, 12.0*Sr/7,str(TIME_YEARS)+' years')
                     plt.scatter(x,y,c=IDs, s=4, cmap='Blues')
-                    plt.text(4.0*AU/7, 5.0*AU/7,str(D2/Sr)+' R$\odot$')
+                    #plt.text(4.0*AU/7, 5.0*AU/7,str(D2/Sr)+' R$\odot$')
                     plt.clim(0, TOT_PARTS)
                     plt.pause(0.05)
                     plt.clf()

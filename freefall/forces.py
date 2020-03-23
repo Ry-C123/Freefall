@@ -90,7 +90,7 @@ def magdrag(x ,y, z, vx, vy, vz, mag, m_e, R_e, M, R, omega, inc, n_step, dt):
     """
     d = math.sqrt((x**2 + y**2+z**2))
     w = omega * d
-    sig = math.asin(x/d)
+    sig = math.atan2(y,x)
     phi_mag = (dt*n_step*omega)
     xyz = [x,y,z]
 
@@ -126,7 +126,7 @@ def magdrag(x ,y, z, vx, vy, vz, mag, m_e, R_e, M, R, omega, inc, n_step, dt):
     TRANS[2][0] =  -math.sin(inc)*math.cos(tp)
     TRANS[2][1] = math.sin(inc)*math.sin(tp)
     TRANS[2][2] = math.cos(inc)
-    
+
     XYZ = [0,0,0]
     BXYZp = [0,0,0]
     BXYZ = [0,0,0]
@@ -153,22 +153,20 @@ def magdrag(x ,y, z, vx, vy, vz, mag, m_e, R_e, M, R, omega, inc, n_step, dt):
             BXYZ[j] += tmp #This step works
 
 
-    jj = 0.8*Sr #epsilon, smoothing factor    
+    jj = 0.01*Sr #epsilon, smoothing factor    
     mag2 = mag*(R/math.sqrt(d**2+jj**2))**3 #Scale dipole field with distance (smoothing factor jj)
     T_Life = m_e*1e3/((R_e*1e2)**2) * 8 * pi/(mag2**2) * math.sqrt(Gcm*M*1e3/(R*1e2))
     K = -1.0/T_Life
 
     ### to find relative velocity
     if y > 0:
-        wx = -math.cos(sig)*w
+        wx = -math.sin(sig)*w
     else:
-        wx = math.cos(sig)*w
+        wx = -math.sin(sig)*w
 
-    if x < 0:
-        wy = -math.sqrt(w**2 - wx**2)
-    else:
-        wy = math.sqrt(w**2 - wx**2)
-    
+    wy = math.cos(sig)*w
+
+    #print(sig, wx, wy)
     diff_v = [vx - wx, vy - wy, vz] #particle velocity - spin
 
     D = BXYZ[0]*diff_v[0] + BXYZ[1]*diff_v[1] + BXYZ[2]*diff_v[2]

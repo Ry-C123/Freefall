@@ -5,8 +5,8 @@ import numpy as np
 import scipy.stats
 from CONFIG import *
 
-peri=696e6/100 * 11.8
-ecc =0.9966
+peri= Sr #696e6#/100 * 11.8
+ecc =0#.9966
 
 
 
@@ -37,7 +37,7 @@ vz=0.0
 
 m=8.3775e-15
 r=1e-6
-while i<50:
+while i<1:
     mux, sddx= x, 3000
     lowlimx=x-1500
     upplimx=x+1500
@@ -59,14 +59,14 @@ while i<50:
     deltaz=scipy.stats.truncnorm.rvs((lowlimz-muz)/sddz, (upplimz-muz)/sddz, loc=muz, scale=sddz, size=n)
     newz=round(random.choice(deltaz),11)
 
-    muvx, sddvx= vx, vx*0.01
+    muvx, sddvx= vx, vx*0.00001
     lowlimvx=vx-(vx*0.02)
     upplimvx=vx+(vx*0.02)
     n=1
     deltavx=scipy.stats.truncnorm.rvs((lowlimvx-muvx)/sddvx, (upplimvx-muvx)/sddvx, loc=muvx, scale=sddvx, size=n)
     newvx=round(random.choice(deltavx),11)
 
-    muvy, sddvy= vy, vy*0.01
+    muvy, sddvy= vy, vy*0.000001
     lowlimvy=vy-(vy*0.02)
     upplimvy=vy+(vy*0.02)
     n=1
@@ -80,7 +80,7 @@ while i<50:
     deltavz=scipy.stats.truncnorm.rvs((lowlimvz-muvz)/sddvz, (upplimvz-muvz)/sddvz, loc=muvz, scale=sddvz, size=n)
     newvz=round(random.choice(deltavz),11)
 
-    print (newx, newy, newz, m, newvx, newvy, newvz, r )
+    #print (newx, newy, newz, m, newvx, newvy, newvz, r )
     R.write(str(i+1)+","+str(newx)+","+str(newy)+","+str(newz)+","+str(newvx)+","+str(newvy)+","+str(newvz)+","+str(r)+","+str(m)+"\n")
     i+=1
 
