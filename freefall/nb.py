@@ -11,7 +11,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from CONFIG import *
-from integrator import basic_int, RK4_conv, RK4, YOSHI
+from integrator import basic_int, RK4, YOSHI
 
 
 if __name__=='__main__':
@@ -36,8 +36,8 @@ if __name__=='__main__':
         func = YOSHI
     elif integ == 'RK4':
         func = RK4
-    elif integ == 'RK4_cv':
-        func = RK4_conv
+    elif integ == 'RKF45':
+        func = RKF45
     elif integ == 'BS':
         print('in prep')
         sys.exit()
@@ -50,14 +50,14 @@ if __name__=='__main__':
     else:
         print('')
         print('resuming from '+runname+'_'+str(restart)+'.simo\n')
-        particles = open(runname+'_'+str(restart)+'.simo', 'r').readlines()   
+        particles = open(runname+'_'+str(restart)+'.simo', 'r').readlines()
     IDs = []
     x = []
     y = []
     z =[] 
     vx = []
     vy = []
-    vz = [] 
+    vz = []
     m_p = []
     r_p = []
 
@@ -133,12 +133,12 @@ if __name__=='__main__':
                 sys.exit()
 
             if (i+1)%OUTPUT_int == 0:
-                print(str(dt*(i+1)*3.17098e-8)+' years')
                 if write_files == True:
                     FILE = open(runname+'_'+str(i+1)+'.simo','w')
                     FILE.write('#ID,X,Y,Z,VX,VY,VZ,r,m,time(years)\n')
                     for L in range(len(x)):
                         FILE.write(str(IDs[L])+','+str(x[L])+','+str(y[L])+','+str(z[L])+','+str(vx[L])+','+str(vy[L])+','+str(vz[L])+','+str(r_p[L])+','+str(m_p[L])+','+str(round(dt*i*3.17098e-8,4))+'\n')
+                print('All particles have made it to step '+str(str(i+1)))
 
                 if PLOT_ON is True:
                     plt.xlim(-2*Sr, 2*Sr)

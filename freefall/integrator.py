@@ -60,61 +60,6 @@ def basic_int(ID,x,y,z,vx,vy,vz,m_e, r_e,dt,n_step,M, R, B, TEMP, omega, inc):
 
 
 
-
-def RK4_conv(ID,x,y,z,vx,vy,vz,m_e, r_e,dt,n_step,M, R, B, TEMP, omega, inc):
-    """
-    Ry Cutter 2020
-    A convoluted 4th order Runge-Kutta
-    """
-    KX1 = (vx * dt)
-    KY1 = (vy * dt)
-    KZ1 = (vz * dt)
-
-    ax1, ay1, az1 = get_acc((KX1/2)+x,(KY1/2)+y,(KZ1/2)+z,vx,vy,vz,M, R, m_e, r_e, B, TEMP, omega,inc,n_step,dt)
-    KVX1 = (ax1*dt) 
-    KVY1 = (ay1*dt)
-    KVY1 = (az1*dt)
-
-    KX2 = ((KVX1/2)+vx)*dt
-    KY2 = ((KVY1/2)+vy)*dt
-    KZ2 = ((KVZ1/2)+vz)*dt
-      
-    ax2, ay2, az2 = get_acc((KX2/2)+x,(KY2/2)+y,(KZ2/2)+z,(KVX1/2)+vx,(KVY1/2)+vy,(KVZ1/2)+vz,M, R, m_e, r_e, B, TEMP,omega,inc,n_step,dt)
-    KVX2 = (ax2*dt) 
-    KVY2 = (ay2*dt)
-    KVZ2 = (az2*dt)
-
-    KX3 = ((KVX2/2)+vx)*dt
-    KY3 = ((KVY2/2)+vy)*dt
-    KZ3 = ((KVZ2/2)+vz)*dt
-      
-    ax3, ay3, az3 = get_acc((KX3/2)+x,(KY3/2)+y, (KZ3/2)+z, (KVX2/2)+vx,(KVY2/2)+vy,(KVZ2/2)+vz,M, R, m_e, r_e, B, TEMP,omega,inc,n_step,dt)
-    KVX3 = (ax3*dt) 
-    KVY3 = (ay3*dt)
-    KVZ3 = (az3*dt)
-
-    KX4 = ((KVX3)+vx)*dt
-    KY4 = ((KVY3)+vy)*dt
-    KZ4 = ((KVZ3)+vz)*dt
-
-    ax4, ay4, az4 = get_acc(KX4+x,KY4+y,KZ4+z,(KVX3)+vx,(KVY3)+vy,(KVZ3)+vz,M, R, m_e, r_e, B, TEMP,omega,inc,n_step,dt)
-    KVX4 = (ax4*dt)
-    KVY4 = (ay4*dt)
-    KVY4 = (az4*dt)
-
-
-    x += 1./6 * (KX1+(2*KX2)+(2*KX3)+KX4)
-    y += 1./6 * (KY1+(2*KY2)+(2*KY3)+KY4)
-    z += 1./6 * (KZ1+(2*KZ2)+(2*KZ3)+KZ4)
-
-    vx += 1./6 * (KVX1+(2*KVX2)+(2*KVX3)+KVX4)
-    vy += 1./6 * (KVY1+(2*KVY2)+(2*KVY3)+KVY4)
-    vz += 1./6 * (KVZ1+(2*KVZ2)+(2*KVZ3)+KVZ4)
-    return(ID,x, y, z, vx, vy, vz)
-  
-
-
-
 def RK4(ID,x,y,z,vx,vy,vz,m_e, r_e,dt,n_step,M, R, B, TEMP, omega, inc):
     """
     Ry Cutter 2020
@@ -133,7 +78,7 @@ def RK4(ID,x,y,z,vx,vy,vz,m_e, r_e,dt,n_step,M, R, B, TEMP, omega, inc):
     KY2 = ((KVY1/2)+vy)*dt
     KZ2 = ((KVZ1/2)+vz)*dt
       
-    ax2, ay2, az2 = get_acc((KX1/2)+x,(KY1/2)+y,(KZ1/2)+z,(KVX1/2)+vx,(KVY1/2)+vy,(KVZ1/2)+vz,M, R, m_e, r_e, B, TEMP,omega,inc,n_step,dt)
+    ax2, ay2, az2 = get_acc((KX1/2)+x,(KY1/2)+y,(KZ1/2)+z,(KVX1/2)+vx,(KVY1/2)+vy,(KVZ1/2)+vz,M, R, m_e, r_e, B, TEMP,omega,inc,n_step,dt/2)
     KVX2 = (ax2*dt) 
     KVY2 = (ay2*dt)
     KVZ2 = (az2*dt)
@@ -142,7 +87,7 @@ def RK4(ID,x,y,z,vx,vy,vz,m_e, r_e,dt,n_step,M, R, B, TEMP, omega, inc):
     KY3 = ((KVY2/2)+vy)*dt
     KZ3 = ((KVZ2/2)+vz)*dt
       
-    ax3, ay3, az3 = get_acc((KX2/2)+x,(KY2/2)+y, (KZ2/2)+z, (KVX2/2)+vx,(KVY2/2)+vy,(KVZ2/2)+vz,M, R, m_e, r_e, B, TEMP,omega,inc,n_step,dt)
+    ax3, ay3, az3 = get_acc((KX2/2)+x,(KY2/2)+y, (KZ2/2)+z, (KVX2/2)+vx,(KVY2/2)+vy,(KVZ2/2)+vz,M, R, m_e, r_e, B, TEMP,omega,inc,n_step,dt/2)
     KVX3 = (ax3*dt) 
     KVY3 = (ay3*dt)
     KVZ3 = (az3*dt)
@@ -164,7 +109,6 @@ def RK4(ID,x,y,z,vx,vy,vz,m_e, r_e,dt,n_step,M, R, B, TEMP, omega, inc):
     vy += 1./6 * (KVY1+(2*KVY2)+(2*KVY3)+KVY4)
     vz += 1./6 * (KVZ1+(2*KVZ2)+(2*KVZ3)+KVZ4)
     return(ID,x, y, z, vx, vy, vz)
-
 
 
 

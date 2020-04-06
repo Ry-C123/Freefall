@@ -153,7 +153,7 @@ def magdrag(x ,y, z, vx, vy, vz, mag, m_e, R_e, M, R, omega, inc, n_step, dt):
             BXYZ[j] += tmp #This step works
 
 
-    jj = 0.01*Sr #epsilon, smoothing factor    
+    jj = 0.125*Sr #epsilon, smoothing factor    
     mag2 = mag*(R/math.sqrt(d**2+jj**2))**3 #Scale dipole field with distance (smoothing factor jj)
     T_Life = m_e*1e3/((R_e*1e2)**2) * 8 * pi/(mag2**2) * math.sqrt(Gcm*M*1e3/(R*1e2))
     K = -1.0/T_Life

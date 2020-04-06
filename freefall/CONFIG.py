@@ -21,9 +21,9 @@ Gcm =6.67*1e-8 # Gravitational Constant in CGS
 
 M = 0.6*Sm #Central Star Mass (Kg)
 R = 0.01*Sr #Central Star Radius (m)
-B = 1e5 #Central Star magnetic field (Guass) [If 0 Mag drag is off]
+B = 0 #Central Star magnetic field (Guass) [If 0 Mag drag is off]
 inc = 0 # Field inclination to the spin axis (deg)
-TEMP = 10000 #Star Temp (kelvin) [If 0 PR drag is off]
+TEMP = 0 #Star Temp (kelvin) [If 0 PR drag is off]
 omega = 0.000 #Star spin (radians per second) 
 
 ##############################################
@@ -36,9 +36,9 @@ omega = 0.000 #Star spin (radians per second)
 
 #####     Simulation Parameters     ########
 
-runname = 'DV' #Name of your simulation
+runname = 'DV3' #Name of your simulation
 restart = 0 #10000 #use step_number to continue simulation runname from that given timestep
-dt = 3.15 #time step (s)
+dt = 7.15 #time step (s)
 n_steps = 10000000000 #number of time steps
 ACC_RAD = 2*R #Collsion radius
 EJE_RAD = 10*AU # Ejection radius
@@ -46,12 +46,11 @@ EJE_RAD = 10*AU # Ejection radius
 integ = 'RK4' #'basic' will use basic integrator 
                 #'yoshi' will use Yoshida method !!!WARNING: UNSTABLE!!!
                 #'RK4' will use 4th order runge-kata
-                #'RK4_cv' will use 4th order convoluted runge-kata !!!WARNING: UNSTABLE!!!
                 #TODO 'BS' will use BS method
 
 PLOT_ON = False  #Change to True to get a real time plot... significantly slows down simulation time!
 write_files = True #Change to True to get output files, for plots, or other types of analysis 
-OUTPUT_int = 2500 # Output interval. Output file and plot update every nth step
+OUTPUT_int = 1500 # Output interval. Output file and plot update every nth step
 OVERWRITE = True #if a simultion already exists overwrite it
 
 

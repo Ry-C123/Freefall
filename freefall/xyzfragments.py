@@ -5,8 +5,8 @@ import numpy as np
 import scipy.stats
 from CONFIG import *
 
-peri= Sr #696e6#/100 * 11.8
-ecc =0#.9966
+peri= 696e6/100 * 11.8
+ecc =0.9966
 
 
 
@@ -30,7 +30,7 @@ x=Apo
 y=0.0
 z=0.0
 
-vx=1e-30
+vx=1e-40
 #vy=1973.6
 vy=V
 vz=0.0
