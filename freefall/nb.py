@@ -11,7 +11,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from CONFIG import *
-from integrator import basic_int, RK4, YOSHI
+from integrator import basic_int, RK4, YOSHI,BS23
 
 
 if __name__=='__main__':
@@ -32,17 +32,17 @@ if __name__=='__main__':
     ###  Which integrator  ####
     if integ == 'basic':
         func = basic_int
-    elif integ == 'yoshi':
+    elif integ == 'YOSHI':
         func = YOSHI
     elif integ == 'RK4':
         func = RK4
-    elif integ == 'RKF45':
-        func = RKF45
+    elif integ == 'BS23':
+        func = BS23
     elif integ == 'BS':
         print('in prep')
         sys.exit()
     else:
-        raise ValueError(integ+" is not a valid integrator. Use either 'basic', 'yoshi', or 'RK4'")
+        raise ValueError(integ+" is not a valid integrator. Use either 'basic', 'YOSHI', 'BS23', or 'RK4'")
     ############################
 
     if restart == 0: 

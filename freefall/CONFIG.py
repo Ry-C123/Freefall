@@ -38,13 +38,14 @@ omega = 0.000 #Star spin (radians per second)
 
 runname = 'DV3' #Name of your simulation
 restart = 0 #10000 #use step_number to continue simulation runname from that given timestep
-dt = 7.15 #time step (s)
+dt = 2.15 #time step (s)
 n_steps = 10000000000 #number of time steps
 ACC_RAD = 2*R #Collsion radius
 EJE_RAD = 10*AU # Ejection radius
 
-integ = 'RK4' #'basic' will use basic integrator 
-                #'yoshi' will use Yoshida method !!!WARNING: UNSTABLE!!!
+integ = 'RK4'   #'basic' will use basic Euler integrator
+                #'YOSHI' will use Yoshida (leap frog) method
+                #'BS23' will use Bogacki-Shampine method
                 #'RK4' will use 4th order runge-kata
                 #TODO 'BS' will use BS method
 

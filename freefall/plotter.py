@@ -12,8 +12,8 @@ for i in range(OUTPUT_int, n_steps, OUTPUT_int*5):
             x.append(float(tmp[1]))
             y.append(float(tmp[2]))
 
-    plt.xlim(-1*AU, 2*AU)
-    plt.ylim(-1*AU, 1*AU)
+    plt.xlim(-0.5*AU, 0.65*AU)
+    plt.ylim(-0.5*AU, 0.5*AU)
     rot_s = dt*i*omega*57.2958 + 270
     plt.plot(0, 0, marker=(3, 0, rot_s), markersize=8, linestyle='None', c='k')
     TIME_YEARS = round((i*dt*3.17098e-8)/0.0836, 4)

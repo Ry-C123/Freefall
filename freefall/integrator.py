@@ -30,7 +30,7 @@ def get_acc(x,y,z,vx,vy,vz,M, R, m_e, r_e, B, TEMP, omega, inc, n_step, dt):
         ax += Mf[0]
         ay += Mf[1]
         az += Mf[2]
-    
+
     return(ax,ay,az)
 
 
@@ -73,11 +73,11 @@ def RK4(ID,x,y,z,vx,vy,vz,m_e, r_e,dt,n_step,M, R, B, TEMP, omega, inc):
     KVX1 = (ax1*dt)
     KVY1 = (ay1*dt)
     KVZ1 = (az1*dt)
-    
+
     KX2 = ((KVX1/2)+vx)*dt
     KY2 = ((KVY1/2)+vy)*dt
     KZ2 = ((KVZ1/2)+vz)*dt
-      
+
     ax2, ay2, az2 = get_acc((KX1/2)+x,(KY1/2)+y,(KZ1/2)+z,(KVX1/2)+vx,(KVY1/2)+vy,(KVZ1/2)+vz,M, R, m_e, r_e, B, TEMP,omega,inc,n_step,dt/2)
     KVX2 = (ax2*dt) 
     KVY2 = (ay2*dt)
@@ -86,7 +86,7 @@ def RK4(ID,x,y,z,vx,vy,vz,m_e, r_e,dt,n_step,M, R, B, TEMP, omega, inc):
     KX3 = ((KVX2/2)+vx)*dt
     KY3 = ((KVY2/2)+vy)*dt
     KZ3 = ((KVZ2/2)+vz)*dt
-      
+
     ax3, ay3, az3 = get_acc((KX2/2)+x,(KY2/2)+y, (KZ2/2)+z, (KVX2/2)+vx,(KVY2/2)+vy,(KVZ2/2)+vz,M, R, m_e, r_e, B, TEMP,omega,inc,n_step,dt/2)
     KVX3 = (ax3*dt) 
     KVY3 = (ay3*dt)
@@ -116,39 +116,85 @@ def YOSHI(ID,x,y,z,vx,vy,vz,m_e, r_e,dt,n_step,M, R, B, TEMP, omega, inc):
     """
     Ry Cutter 2020
     Standard Yoshida method
+    H Yoshida - Physics letters A, 1990 - Elsevier
     """
-    D1 = -2**(1.0/3)/(2-2**(1.0/3))
-    D2 = 1.0/(2-2**(1.0/3))
- 
-    X1 = x + 0.6756*vx*dt
-    Y1 = y + 0.6756*vy*dt
-    Z1 = z + 0.6756*vz*dt
+    D2 = -2**(1.0/3)/(2-2**(1.0/3))
+    D1 = 1.0/(2-2**(1.0/3))
+    C1 = 0.6756
+    C2 = -0.1756
 
-    AX1,AY1,AZ1= get_acc(X1,Y1,Z1,vx,vy,vz,M, R, m_e, r_e, B, TEMP,omega,inc,n_step,dt)
-    VX1 = vx + D1*AX1*dt
-    VY1 = vy + D1*AY1*dt
-    VZ1 = vz + D1*AZ1*dt
+    x += C1*vx*dt
+    y += C1*vy*dt
+    z += C1*vz*dt    
+    ax, ay, az = get_acc(x,y,z,vx,vy,vz,M, R, m_e, r_e, B, TEMP,omega,inc,n_step,dt)
+    vx += D1*ax*dt
+    vy += D1*ay*dt
+    vz += D1*az*dt
 
-    X2 = X1 - 0.1756*VX1*dt
-    Y2 = Y1 - 0.1756*VY1*dt
-    Z2 = Z1 - 0.1756*VZ1*dt
+    x += C2*vx*dt
+    y += C2*vy*dt
+    z += C2*vz*dt    
+    ax, ay, az = get_acc(x,y,z,vx,vy,vz,M, R, m_e, r_e, B, TEMP,omega,inc,n_step,dt)
+    vx += D2*ax*dt
+    vy += D2*ay*dt
+    vz += D2*az*dt
 
-    AX2,AY2,AZ2= get_acc(X2,Y2,Z2,VX1,VY1,VZ1,M, R, m_e, r_e, B, TEMP,omega,inc,n_step,dt)
-    VX2 = VX1 + D2*AX2*dt
-    VY2 = VY1 + D2*AY2*dt
-    VZ2 = VZ1 + D2*AZ2*dt
+    x += C2*vx*dt
+    y += C2*vy*dt
+    z += C2*vz*dt    
+    ax, ay, az = get_acc(x,y,z,vx,vy,vz,M, R, m_e, r_e, B, TEMP,omega,inc,n_step,dt)
+    vx += D1*ax*dt
+    vy += D1*ay*dt
+    vz += D1*az*dt
 
-    X3 = X2 - 0.1756*VX2*dt
-    Y3 = Y2 - 0.1756*VY2*dt
-    Z3 = Z2 - 0.1756*VZ2*dt
+    x += C1*vx*dt
+    y += C1*vy*dt
+    z += C1*vz*dt    
 
-    AX3,AY3,AZ3= get_acc(X3,Y3,Z3,VX1,VY2,VZ2,M, R, m_e, r_e, B, TEMP,omega,inc,n_step,dt)
-    VX3 = VX2 + D2*AX2*dt
-    VY3 = VY2 + D2*AY2*dt
-    VZ3 = VZ2 + D2*AZ2*dt
+    return(ID,x, y, z, vx, vy, vz) #update nb.py
 
-    X4 = X3 + 0.6756*VX3*dt
-    Y4 = Y3 + 0.6756*VY3*dt
-    Z4 = Z3 + 0.6756*VZ3*dt
-    
-    return(ID,X4, Y4, Z4, VX3, VY3, VZ3) #update nb.py
+
+def BS23(ID,x,y,z,vx,vy,vz,m_e, r_e,dt,n_step,M, R, B, TEMP, omega, inc):
+    """
+    Ry Cutter 2020
+    Bogacki–Shampine method
+    P. Bogacki, LF Shampine - Applied Mathematics Letters, 1989
+    """
+    ax, ay, az = get_acc(x,y,z,vx,vy,vz,M, R, m_e, r_e, B, TEMP,omega,inc,n_step,dt)
+    KVX1 = ax*dt
+    KVY1 = ay*dt
+    KVZ1 = az*dt
+
+    KX1 = (vx * dt)
+    KY1 = (vy * dt)
+    KZ1 = (vz * dt)
+
+    ax, ay, az = get_acc(KX1/2+x,KY1/2+y,KZ1/2+z,KVX1/2+vx,KVY1/2+vy,KVZ1/2+vz,M, R, m_e, r_e, B, TEMP,omega,inc,n_step,dt/2.)
+    KVX2 = ax*dt
+    KVY2 = ay*dt
+    KVZ2 = az*dt
+
+    KX2 = (KVX1/2+vx) * dt
+    KY2 = (KVY1/2+vy) * dt
+    KZ2 = (KVZ1/2+vz) * dt
+
+    ax, ay, az = get_acc(3.*KX2/4+x,3.*KY2/4+y,3.*KZ2/4+z,3.*KVX2/4+vx,3.*KVY2/4+vy,3.*KVZ2/4+vz,M, R, m_e, r_e, B, TEMP,omega,inc,n_step,3.*dt/4)
+    KVX3 = ax*dt
+    KVY3 = ay*dt
+    KVZ3 = az*dt
+
+    KX3 = (3.*KVX2/4+vx) * dt
+    KY3 = (3.*KVY2/4+vy) * dt
+    KZ3 = (3.*KVZ2/4+vz) * dt
+
+    x += 1./9 * (2*KX1 + 3*KX2 + 4*KX3)
+    y += 1./9 * (2*KY1 + 3*KY2 + 4*KY3)
+    z += 1./9 * (2*KZ1 + 3*KZ2 + 4*KZ3)
+
+    vx += 1./9 * (2*KVX1 + 3*KVX2 + 4*KVX3)
+    vy += 1./9 * (2*KVY1 + 3*KVY2 + 4*KVY3)
+    vz += 1./9 * (2*KVZ1 + 3*KVZ2 + 4*KVZ3)
+
+    return(ID,x, y, z, vx, vy, vz)
+
+
